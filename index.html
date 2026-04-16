@@ -14,7 +14,6 @@
     min-height: 100vh;
   }
 
-  /* ── Header ── */
   .header {
     background: #1C1C1E;
     color: #fff;
@@ -26,8 +25,8 @@
     top: 0;
     z-index: 100;
   }
-  .header h1 { font-size: 20px; font-weight: 700; letter-spacing: -0.3px; }
-  .header .date { font-size: 13px; color: #8E8E93; }
+  .header-title { font-size: 20px; font-weight: 700; letter-spacing: -0.3px; }
+  .header-date  { font-size: 13px; color: #8E8E93; margin-top: 2px; }
   .refresh-btn {
     background: #2C2C2E;
     border: none;
@@ -36,16 +35,13 @@
     border-radius: 8px;
     font-size: 13px;
     cursor: pointer;
-    transition: background 0.2s;
   }
   .refresh-btn:hover { background: #3A3A3C; }
 
-  /* ── Layout ── */
   .container { max-width: 1100px; margin: 0 auto; padding: 20px 16px; }
   .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
   @media (max-width: 700px) { .grid { grid-template-columns: 1fr; } }
 
-  /* ── Cards ── */
   .card {
     background: #fff;
     border-radius: 14px;
@@ -59,84 +55,38 @@
     justify-content: space-between;
     align-items: center;
   }
-  .card-title {
-    font-size: 15px;
-    font-weight: 700;
-    color: #1C1C1E;
-  }
+  .card-title { font-size: 15px; font-weight: 700; }
   .card-badge {
-    font-size: 11px;
-    font-weight: 600;
-    background: #F2F2F7;
-    color: #8E8E93;
-    padding: 3px 8px;
-    border-radius: 20px;
+    font-size: 11px; font-weight: 600;
+    background: #F2F2F7; color: #8E8E93;
+    padding: 3px 8px; border-radius: 20px;
   }
-  .card-body { padding: 0; }
 
-  /* ── Stats row ── */
+  /* Stats */
   .stats-row {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 0;
-    border-bottom: 1px solid #F2F2F7;
   }
   .stat {
-    padding: 14px 16px;
+    padding: 20px 16px;
     text-align: center;
     border-right: 1px solid #F2F2F7;
   }
   .stat:last-child { border-right: none; }
-  .stat-value {
-    font-size: 20px;
-    font-weight: 700;
-    color: #1C1C1E;
-  }
+  .stat-value { font-size: 22px; font-weight: 700; color: #1C1C1E; }
   .stat-value.green { color: #34C759; }
-  .stat-label {
-    font-size: 11px;
-    color: #8E8E93;
-    margin-top: 2px;
-  }
+  .stat-label { font-size: 11px; color: #8E8E93; margin-top: 4px; }
 
-  /* ── Sales list ── */
-  .sale-item {
-    padding: 12px 18px;
-    border-bottom: 1px solid #F2F2F7;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 12px;
-  }
-  .sale-item:last-child { border-bottom: none; }
-  .sale-left { flex: 1; min-width: 0; }
-  .sale-title {
+  /* No sales today */
+  .empty-state {
+    padding: 28px;
+    text-align: center;
+    color: #8E8E93;
     font-size: 13px;
-    font-weight: 600;
-    color: #1C1C1E;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
   }
-  .sale-meta {
-    font-size: 11px;
-    color: #8E8E93;
-    margin-top: 2px;
-  }
-  .sale-right { text-align: right; flex-shrink: 0; }
-  .sale-total {
-    font-size: 14px;
-    font-weight: 700;
-    color: #1C1C1E;
-  }
-  .sale-net {
-    font-size: 11px;
-    color: #34C759;
-    font-weight: 600;
-    margin-top: 2px;
-  }
+  .empty-icon { font-size: 28px; margin-bottom: 8px; }
 
-  /* ── Tasks list ── */
+  /* Tasks */
   .task-item {
     padding: 12px 18px;
     border-bottom: 1px solid #F2F2F7;
@@ -146,154 +96,94 @@
   }
   .task-item:last-child { border-bottom: none; }
   .task-check {
-    width: 20px;
-    height: 20px;
+    width: 20px; height: 20px;
     border-radius: 50%;
     border: 2px solid #D1D1D6;
-    flex-shrink: 0;
-    margin-top: 1px;
-    display: flex;
-    align-items: center;
+    flex-shrink: 0; margin-top: 1px;
+    display: flex; align-items: center;
     justify-content: center;
-    font-size: 11px;
-    color: #fff;
+    font-size: 11px; color: #fff;
   }
-  .task-check.done {
-    background: #34C759;
-    border-color: #34C759;
-  }
-  .task-check.overdue {
-    border-color: #FF3B30;
-  }
+  .task-check.done     { background: #34C759; border-color: #34C759; }
+  .task-check.overdue  { border-color: #FF3B30; }
   .task-content { flex: 1; min-width: 0; }
-  .task-title {
-    font-size: 13px;
-    font-weight: 600;
-    color: #1C1C1E;
-  }
-  .task-title.done {
-    text-decoration: line-through;
-    color: #8E8E93;
-    font-weight: 400;
-  }
-  .task-due {
-    font-size: 11px;
-    margin-top: 2px;
-  }
+  .task-title { font-size: 13px; font-weight: 600; color: #1C1C1E; }
+  .task-title.done { text-decoration: line-through; color: #8E8E93; font-weight: 400; }
+  .task-due { font-size: 11px; margin-top: 2px; }
   .task-due.overdue { color: #FF3B30; font-weight: 600; }
   .task-due.today   { color: #FF9500; font-weight: 600; }
   .task-due.future  { color: #8E8E93; }
 
-  /* ── Loading / empty states ── */
   .loading {
-    padding: 32px;
-    text-align: center;
-    color: #8E8E93;
-    font-size: 13px;
+    padding: 28px; text-align: center;
+    color: #8E8E93; font-size: 13px;
   }
   .spinner {
-    display: inline-block;
-    width: 20px;
-    height: 20px;
-    border: 2px solid #E5E5EA;
-    border-top-color: #8E8E93;
-    border-radius: 50%;
-    animation: spin 0.8s linear infinite;
+    display: inline-block; width: 20px; height: 20px;
+    border: 2px solid #E5E5EA; border-top-color: #8E8E93;
+    border-radius: 50%; animation: spin 0.8s linear infinite;
     margin-bottom: 8px;
   }
   @keyframes spin { to { transform: rotate(360deg); } }
 
-  /* ── Setup banner ── */
   .setup-banner {
-    background: #FFF3CD;
-    border: 1px solid #FFD60A;
-    border-radius: 10px;
-    padding: 14px 16px;
-    margin-bottom: 16px;
-    font-size: 13px;
-    color: #7D6608;
+    background: #FFF3CD; border: 1px solid #FFD60A;
+    border-radius: 10px; padding: 14px 16px;
+    margin-bottom: 16px; font-size: 13px; color: #7D6608;
   }
   .setup-banner strong { display: block; margin-bottom: 4px; }
   .setup-banner input {
-    width: 100%;
-    padding: 8px 10px;
-    border: 1px solid #FFD60A;
-    border-radius: 6px;
-    font-size: 13px;
-    margin-top: 8px;
-    background: #fff;
+    width: 100%; padding: 8px 10px;
+    border: 1px solid #FFD60A; border-radius: 6px;
+    font-size: 13px; margin-top: 8px; background: #fff;
   }
   .setup-banner button {
-    margin-top: 8px;
-    background: #1C1C1E;
-    color: #fff;
-    border: none;
-    padding: 8px 16px;
-    border-radius: 6px;
-    font-size: 13px;
-    cursor: pointer;
-    width: 100%;
+    margin-top: 8px; background: #1C1C1E; color: #fff;
+    border: none; padding: 8px 16px; border-radius: 6px;
+    font-size: 13px; cursor: pointer; width: 100%;
   }
-
-  /* ── Full width card ── */
-  .full-width { grid-column: 1 / -1; }
 </style>
 </head>
 <body>
 
 <div class="header">
   <div>
-    <div class="header h1">Personal Ops</div>
-    <div class="date" id="headerDate"></div>
+    <div class="header-title">Personal Ops</div>
+    <div class="header-date" id="headerDate"></div>
   </div>
   <button class="refresh-btn" onclick="loadAll()">↻ Refresh</button>
 </div>
 
 <div class="container">
 
-  <!-- Setup banner (shown until URL is saved) -->
   <div class="setup-banner" id="setupBanner" style="display:none">
     <strong>⚙️ One-time setup required</strong>
-    Paste your Google Apps Script Web App URL below to connect your data.
+    Paste your Google Apps Script Web App URL below.
     <input type="text" id="webAppUrl" placeholder="https://script.google.com/macros/s/.../exec">
     <button onclick="saveUrl()">Save & Connect</button>
   </div>
 
   <div class="grid">
 
-    <!-- eBay Sales Card -->
+    <!-- eBay Sales — Today only -->
     <div class="card">
       <div class="card-header">
         <span class="card-title">🛍 eBay Sales</span>
-        <span class="card-badge" id="salesBadge">2026</span>
+        <span class="card-badge" id="salesBadge">Today</span>
       </div>
-      <div class="card-body">
-        <div class="stats-row">
-          <div class="stat">
-            <div class="stat-value" id="statOrders">—</div>
-            <div class="stat-label">Orders</div>
-          </div>
-          <div class="stat">
-            <div class="stat-value" id="statRevenue">—</div>
-            <div class="stat-label">Revenue</div>
-          </div>
-          <div class="stat">
-            <div class="stat-value green" id="statNet">—</div>
-            <div class="stat-label">Net Earned</div>
-          </div>
-        </div>
-        <div id="salesList"><div class="loading"><div class="spinner"></div><br>Loading sales...</div></div>
+      <div id="salesContent">
+        <div class="loading"><div class="spinner"></div><br>Loading...</div>
       </div>
     </div>
 
-    <!-- Google Tasks Card -->
+    <!-- Tasks -->
     <div class="card">
       <div class="card-header">
         <span class="card-title">✅ Tasks</span>
         <span class="card-badge" id="tasksBadge">—</span>
       </div>
-      <div class="card-body">
-        <div id="tasksList"><div class="loading"><div class="spinner"></div><br>Loading tasks...</div></div>
+      <div id="tasksList">
+        <div class="loading"><div class="spinner"></div><br>Loading...</div>
       </div>
     </div>
 
@@ -303,11 +193,11 @@
 <script>
   const STORAGE_KEY = 'personalOpsWebAppUrl';
 
-  // ── Date header ──
+  // Header date
+  var now = new Date();
   document.getElementById('headerDate').textContent =
-    new Date().toLocaleDateString('en-US', { weekday:'long', month:'long', day:'numeric', year:'numeric' });
+    now.toLocaleDateString('en-US', { weekday:'long', month:'long', day:'numeric', year:'numeric' });
 
-  // ── URL management ──
   function getUrl() { return localStorage.getItem(STORAGE_KEY) || ''; }
   function saveUrl() {
     var url = document.getElementById('webAppUrl').value.trim();
@@ -317,66 +207,71 @@
     loadAll();
   }
 
-  // ── Load everything ──
   function loadAll() {
     var url = getUrl();
     if (!url) {
       document.getElementById('setupBanner').style.display = 'block';
-      document.getElementById('salesList').innerHTML = '<div class="loading">Waiting for setup...</div>';
-      document.getElementById('tasksList').innerHTML = '<div class="loading">Waiting for setup...</div>';
+      document.getElementById('salesContent').innerHTML = '<div class="loading">Waiting for setup...</div>';
+      document.getElementById('tasksList').innerHTML   = '<div class="loading">Waiting for setup...</div>';
       return;
     }
     loadSales(url);
     loadTasks(url);
   }
 
-  // ── eBay Sales ──
+  // ── eBay Sales — today only, summary ──
   function loadSales(url) {
     fetch(url + '?action=sales')
       .then(function(r) { return r.json(); })
       .then(function(data) {
         var sales = data.sales || [];
-        renderSales(sales);
+
+        // Filter to today only
+        var todayStr = now.toLocaleDateString('en-US', { month:'short', day:'2-digit', year:'numeric' });
+        var todaySales = sales.filter(function(s) {
+          return s.date === todayStr;
+        });
+
+        renderSalesSummary(todaySales);
       })
       .catch(function(err) {
-        document.getElementById('salesList').innerHTML =
-          '<div class="loading">Error loading sales.<br><small>' + err.message + '</small></div>';
+        document.getElementById('salesContent').innerHTML =
+          '<div class="loading">Error: ' + err.message + '</div>';
       });
   }
 
-  function renderSales(sales) {
+  function renderSalesSummary(sales) {
     if (!sales.length) {
-      document.getElementById('salesList').innerHTML = '<div class="loading">No sales found.</div>';
+      document.getElementById('salesContent').innerHTML =
+        '<div class="empty-state"><div class="empty-icon">📦</div>No sales today yet</div>';
       return;
     }
 
+    var totalOrders  = sales.length;
     var totalRevenue = 0, totalNet = 0;
     sales.forEach(function(s) {
-      totalRevenue += parseFloat(s.orderTotal) || 0;
+      totalRevenue += parseFloat(s.orderTotal)  || 0;
       totalNet     += parseFloat(s.netEarnings) || 0;
     });
 
-    document.getElementById('statOrders').textContent  = sales.length;
-    document.getElementById('statRevenue').textContent = '$' + totalRevenue.toFixed(2);
-    document.getElementById('statNet').textContent     = '$' + totalNet.toFixed(2);
-
-    var html = '';
-    sales.slice(0, 8).forEach(function(s) {
-      html += '<div class="sale-item">' +
-        '<div class="sale-left">' +
-          '<div class="sale-title">' + escHtml(s.itemTitle) + '</div>' +
-          '<div class="sale-meta">' + escHtml(s.date) + ' · ' + escHtml(s.buyer) + ' · Qty: ' + s.qty + '</div>' +
+    document.getElementById('salesContent').innerHTML =
+      '<div class="stats-row">' +
+        '<div class="stat">' +
+          '<div class="stat-value">' + totalOrders + '</div>' +
+          '<div class="stat-label">Orders</div>' +
         '</div>' +
-        '<div class="sale-right">' +
-          '<div class="sale-total">$' + parseFloat(s.orderTotal).toFixed(2) + '</div>' +
-          '<div class="sale-net">+$' + parseFloat(s.netEarnings).toFixed(2) + '</div>' +
+        '<div class="stat">' +
+          '<div class="stat-value">$' + totalRevenue.toFixed(2) + '</div>' +
+          '<div class="stat-label">Revenue</div>' +
+        '</div>' +
+        '<div class="stat">' +
+          '<div class="stat-value green">$' + totalNet.toFixed(2) + '</div>' +
+          '<div class="stat-label">Net Earned</div>' +
         '</div>' +
       '</div>';
-    });
-    document.getElementById('salesList').innerHTML = html;
   }
 
-  // ── Google Tasks ──
+  // ── Tasks ──
   function loadTasks(url) {
     fetch(url + '?action=tasks')
       .then(function(r) { return r.json(); })
@@ -386,7 +281,7 @@
       })
       .catch(function(err) {
         document.getElementById('tasksList').innerHTML =
-          '<div class="loading">Error loading tasks.<br><small>' + err.message + '</small></div>';
+          '<div class="loading">Error: ' + err.message + '</div>';
       });
   }
 
@@ -395,7 +290,8 @@
     document.getElementById('tasksBadge').textContent = incomplete + ' pending';
 
     if (!tasks.length) {
-      document.getElementById('tasksList').innerHTML = '<div class="loading">No tasks found.</div>';
+      document.getElementById('tasksList').innerHTML =
+        '<div class="empty-state"><div class="empty-icon">🎉</div>No tasks found</div>';
       return;
     }
 
@@ -407,33 +303,28 @@
       if (t.due) {
         var due = new Date(t.due); due.setHours(0,0,0,0);
         var diff = Math.round((due - today) / 86400000);
-        if (diff < 0)      { dueStr = 'Overdue ' + Math.abs(diff) + 'd'; dueClass = 'overdue'; }
+        if (diff < 0)       { dueStr = 'Overdue ' + Math.abs(diff) + 'd'; dueClass = 'overdue'; }
         else if (diff === 0){ dueStr = 'Due today';  dueClass = 'today'; }
-        else               { dueStr = 'Due in ' + diff + 'd'; dueClass = 'future'; }
+        else                { dueStr = 'Due in ' + diff + 'd'; dueClass = 'future'; }
       }
-
       var checkClass = t.completed ? 'done' : (dueClass === 'overdue' ? 'overdue' : '');
-      var checkIcon  = t.completed ? '✓' : '';
-
-      html += '<div class="task-item">' +
-        '<div class="task-check ' + checkClass + '">' + checkIcon + '</div>' +
-        '<div class="task-content">' +
-          '<div class="task-title' + (t.completed ? ' done' : '') + '">' + escHtml(t.title) + '</div>' +
-          (dueStr ? '<div class="task-due ' + dueClass + '">' + dueStr + '</div>' : '') +
-        '</div>' +
-      '</div>';
+      html +=
+        '<div class="task-item">' +
+          '<div class="task-check ' + checkClass + '">' + (t.completed ? '✓' : '') + '</div>' +
+          '<div class="task-content">' +
+            '<div class="task-title' + (t.completed ? ' done' : '') + '">' + escHtml(t.title) + '</div>' +
+            (dueStr ? '<div class="task-due ' + dueClass + '">' + dueStr + '</div>' : '') +
+          '</div>' +
+        '</div>';
     });
-
     document.getElementById('tasksList').innerHTML = html;
   }
 
-  function escHtml(str) {
-    return String(str)
-      .replace(/&/g,'&amp;').replace(/</g,'&lt;')
+  function escHtml(s) {
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;')
       .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
   }
 
-  // ── Init ──
   loadAll();
 </script>
 </body>
