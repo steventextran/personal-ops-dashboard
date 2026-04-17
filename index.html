@@ -6,142 +6,84 @@
 <title>Personal Ops Dashboard</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
-
-  body {
-    font-family: 'Arial', sans-serif;
-    background: #F2F2F7;
-    color: #1C1C1E;
-    min-height: 100vh;
-  }
+  body { font-family: 'Arial', sans-serif; background: #F2F2F7; color: #1C1C1E; min-height: 100vh; }
 
   .header {
-    background: #1C1C1E;
-    color: #fff;
+    background: #1C1C1E; color: #fff;
     padding: 20px 24px 16px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    position: sticky;
-    top: 0;
-    z-index: 100;
+    display: flex; justify-content: space-between; align-items: center;
+    position: sticky; top: 0; z-index: 100;
   }
-  .header-title { font-size: 20px; font-weight: 700; letter-spacing: -0.3px; }
+  .header-title { font-size: 20px; font-weight: 700; }
   .header-date  { font-size: 13px; color: #8E8E93; margin-top: 2px; }
-  .refresh-btn {
-    background: #2C2C2E;
-    border: none;
-    color: #fff;
-    padding: 8px 14px;
-    border-radius: 8px;
-    font-size: 13px;
-    cursor: pointer;
-  }
+  .refresh-btn  { background: #2C2C2E; border: none; color: #fff; padding: 8px 14px; border-radius: 8px; font-size: 13px; cursor: pointer; }
   .refresh-btn:hover { background: #3A3A3C; }
 
   .container { max-width: 1100px; margin: 0 auto; padding: 20px 16px; }
   .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
   @media (max-width: 700px) { .grid { grid-template-columns: 1fr; } }
 
-  .card {
-    background: #fff;
-    border-radius: 14px;
-    overflow: hidden;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
-  }
-  .card-header {
-    padding: 16px 18px 12px;
-    border-bottom: 1px solid #F2F2F7;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  .card-title { font-size: 15px; font-weight: 700; }
-  .card-badge {
-    font-size: 11px; font-weight: 600;
-    background: #F2F2F7; color: #8E8E93;
-    padding: 3px 8px; border-radius: 20px;
-  }
+  .card { background: #fff; border-radius: 14px; overflow: hidden; box-shadow: 0 1px 4px rgba(0,0,0,0.08); }
+  .card-header { padding: 16px 18px 12px; border-bottom: 1px solid #F2F2F7; display: flex; justify-content: space-between; align-items: center; }
+  .card-title  { font-size: 15px; font-weight: 700; }
+  .card-badge  { font-size: 11px; font-weight: 600; background: #F2F2F7; color: #8E8E93; padding: 3px 8px; border-radius: 20px; }
 
-  /* Stats */
-  .stats-row {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-  }
-  .stat {
-    padding: 20px 16px;
-    text-align: center;
-    border-right: 1px solid #F2F2F7;
-  }
+  .stats-row { display: grid; grid-template-columns: repeat(3, 1fr); }
+  .stat { padding: 20px 16px; text-align: center; border-right: 1px solid #F2F2F7; }
   .stat:last-child { border-right: none; }
-  .stat-value { font-size: 22px; font-weight: 700; color: #1C1C1E; }
+  .stat-value { font-size: 22px; font-weight: 700; }
   .stat-value.green { color: #34C759; }
   .stat-label { font-size: 11px; color: #8E8E93; margin-top: 4px; }
 
-  /* No sales today */
-  .empty-state {
-    padding: 28px;
-    text-align: center;
-    color: #8E8E93;
-    font-size: 13px;
-  }
-  .empty-icon { font-size: 28px; margin-bottom: 8px; }
+  .log-btn { display: block; width: calc(100% - 36px); margin: 12px 18px; background: #1C1C1E; color: #fff; border: none; padding: 10px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; }
+  .log-btn:hover { background: #3A3A3C; }
 
-  /* Tasks */
-  .task-item {
-    padding: 12px 18px;
-    border-bottom: 1px solid #F2F2F7;
-    display: flex;
-    align-items: flex-start;
-    gap: 12px;
-  }
+  /* Modal */
+  .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 200; align-items: center; justify-content: center; padding: 16px; }
+  .modal-overlay.open { display: flex; }
+  .modal { background: #fff; border-radius: 16px; padding: 24px; width: 100%; max-width: 440px; box-shadow: 0 8px 32px rgba(0,0,0,0.2); max-height: 90vh; overflow-y: auto; }
+  .modal h2 { font-size: 17px; font-weight: 700; margin-bottom: 16px; }
+
+  .form-row { margin-bottom: 12px; }
+  .form-row label { display: block; font-size: 11px; font-weight: 600; color: #8E8E93; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .form-row input,
+  .form-row select { width: 100%; padding: 10px 12px; border: 1px solid #E5E5EA; border-radius: 8px; font-size: 14px; color: #1C1C1E; background: #fff; }
+  .form-row input:focus,
+  .form-row select:focus { outline: none; border-color: #007AFF; }
+  .form-2col { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+  .net-preview { background: #F2F2F7; border-radius: 8px; padding: 12px; margin-bottom: 16px; font-size: 13px; color: #8E8E93; }
+  .net-preview .net-amount { font-size: 20px; font-weight: 700; color: #34C759; display: block; margin-top: 4px; }
+  .net-preview .fee-detail { font-size: 11px; color: #8E8E93; margin-top: 2px; }
+
+  .modal-actions { display: flex; gap: 10px; }
+  .btn-cancel { flex: 1; padding: 11px; border: 1px solid #E5E5EA; border-radius: 8px; font-size: 14px; cursor: pointer; background: #fff; }
+  .btn-save   { flex: 2; padding: 11px; border: none; background: #1C1C1E; color: #fff; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; }
+  .btn-save:disabled { background: #8E8E93; cursor: not-allowed; }
+
+  .task-item { padding: 12px 18px; border-bottom: 1px solid #F2F2F7; display: flex; align-items: flex-start; gap: 12px; }
   .task-item:last-child { border-bottom: none; }
-  .task-check {
-    width: 20px; height: 20px;
-    border-radius: 50%;
-    border: 2px solid #D1D1D6;
-    flex-shrink: 0; margin-top: 1px;
-    display: flex; align-items: center;
-    justify-content: center;
-    font-size: 11px; color: #fff;
-  }
-  .task-check.done     { background: #34C759; border-color: #34C759; }
-  .task-check.overdue  { border-color: #FF3B30; }
-  .task-content { flex: 1; min-width: 0; }
-  .task-title { font-size: 13px; font-weight: 600; color: #1C1C1E; }
+  .task-check { width: 20px; height: 20px; border-radius: 50%; border: 2px solid #D1D1D6; flex-shrink: 0; margin-top: 1px; display: flex; align-items: center; justify-content: center; font-size: 11px; color: #fff; }
+  .task-check.done    { background: #34C759; border-color: #34C759; }
+  .task-check.overdue { border-color: #FF3B30; }
+  .task-content { flex: 1; }
+  .task-title { font-size: 13px; font-weight: 600; }
   .task-title.done { text-decoration: line-through; color: #8E8E93; font-weight: 400; }
   .task-due { font-size: 11px; margin-top: 2px; }
   .task-due.overdue { color: #FF3B30; font-weight: 600; }
   .task-due.today   { color: #FF9500; font-weight: 600; }
   .task-due.future  { color: #8E8E93; }
 
-  .loading {
-    padding: 28px; text-align: center;
-    color: #8E8E93; font-size: 13px;
-  }
-  .spinner {
-    display: inline-block; width: 20px; height: 20px;
-    border: 2px solid #E5E5EA; border-top-color: #8E8E93;
-    border-radius: 50%; animation: spin 0.8s linear infinite;
-    margin-bottom: 8px;
-  }
+  .empty-state { padding: 28px; text-align: center; color: #8E8E93; font-size: 13px; }
+  .empty-icon  { font-size: 28px; margin-bottom: 8px; }
+  .loading     { padding: 28px; text-align: center; color: #8E8E93; font-size: 13px; }
+  .spinner     { display: inline-block; width: 20px; height: 20px; border: 2px solid #E5E5EA; border-top-color: #8E8E93; border-radius: 50%; animation: spin 0.8s linear infinite; margin-bottom: 8px; }
   @keyframes spin { to { transform: rotate(360deg); } }
 
-  .setup-banner {
-    background: #FFF3CD; border: 1px solid #FFD60A;
-    border-radius: 10px; padding: 14px 16px;
-    margin-bottom: 16px; font-size: 13px; color: #7D6608;
-  }
+  .setup-banner { background: #FFF3CD; border: 1px solid #FFD60A; border-radius: 10px; padding: 14px 16px; margin-bottom: 16px; font-size: 13px; color: #7D6608; }
   .setup-banner strong { display: block; margin-bottom: 4px; }
-  .setup-banner input {
-    width: 100%; padding: 8px 10px;
-    border: 1px solid #FFD60A; border-radius: 6px;
-    font-size: 13px; margin-top: 8px; background: #fff;
-  }
-  .setup-banner button {
-    margin-top: 8px; background: #1C1C1E; color: #fff;
-    border: none; padding: 8px 16px; border-radius: 6px;
-    font-size: 13px; cursor: pointer; width: 100%;
-  }
+  .setup-banner input  { width: 100%; padding: 8px 10px; border: 1px solid #FFD60A; border-radius: 6px; font-size: 13px; margin-top: 8px; background: #fff; }
+  .setup-banner button { margin-top: 8px; background: #1C1C1E; color: #fff; border: none; padding: 8px 16px; border-radius: 6px; font-size: 13px; cursor: pointer; width: 100%; }
 </style>
 </head>
 <body>
@@ -155,7 +97,6 @@
 </div>
 
 <div class="container">
-
   <div class="setup-banner" id="setupBanner" style="display:none">
     <strong>⚙️ One-time setup required</strong>
     Paste your Google Apps Script Web App URL below.
@@ -164,16 +105,14 @@
   </div>
 
   <div class="grid">
-
-    <!-- eBay Sales — Today only -->
+    <!-- eBay Sales -->
     <div class="card">
       <div class="card-header">
         <span class="card-title">🛍 eBay Sales</span>
-        <span class="card-badge" id="salesBadge">Today</span>
+        <span class="card-badge">Today</span>
       </div>
-      <div id="salesContent">
-        <div class="loading"><div class="spinner"></div><br>Loading...</div>
-      </div>
+      <div id="salesContent"><div class="loading"><div class="spinner"></div><br>Loading...</div></div>
+      <button class="log-btn" onclick="openModal()">+ Log Sale</button>
     </div>
 
     <!-- Tasks -->
@@ -182,21 +121,110 @@
         <span class="card-title">✅ Tasks</span>
         <span class="card-badge" id="tasksBadge">—</span>
       </div>
-      <div id="tasksList">
-        <div class="loading"><div class="spinner"></div><br>Loading...</div>
+      <div id="tasksList"><div class="loading"><div class="spinner"></div><br>Loading...</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- Log Sale Modal -->
+<div class="modal-overlay" id="saleModal">
+  <div class="modal">
+    <h2>🛍 Log eBay Sale</h2>
+
+    <div class="form-row">
+      <label>Category</label>
+      <select id="f_category" onchange="updateNet()">
+        <option value="motors">eBay Motors Parts (13.6%)</option>
+        <option value="electronics">Electronics (13.25%)</option>
+        <option value="clothing">Clothing & Accessories (13.25%)</option>
+        <option value="other">Other / General (13.25%)</option>
+      </select>
+    </div>
+
+    <div class="form-row">
+      <label>Item Title</label>
+      <input type="text" id="f_item" placeholder="e.g. Tesla Sun Visor Cover - Black">
+    </div>
+
+    <div class="form-2col">
+      <div class="form-row">
+        <label>Order Total ($)</label>
+        <input type="number" id="f_orderTotal" placeholder="25.98" step="0.01" oninput="updateNet()">
+      </div>
+      <div class="form-row">
+        <label>Sale Price ($)</label>
+        <input type="number" id="f_salePrice" placeholder="19.99" step="0.01">
       </div>
     </div>
 
+    <div class="form-2col">
+      <div class="form-row">
+        <label>Shipping Charged ($)</label>
+        <input type="number" id="f_shipping" placeholder="0.00" step="0.01">
+      </div>
+      <div class="form-row">
+        <label>Qty</label>
+        <input type="number" id="f_qty" value="1" min="1">
+      </div>
+    </div>
+
+    <div class="form-2col">
+      <div class="form-row">
+        <label>Buyer Username</label>
+        <input type="text" id="f_buyer" placeholder="buyerusername">
+      </div>
+      <div class="form-row">
+        <label>Order ID (optional)</label>
+        <input type="text" id="f_orderId" placeholder="01-12345-67890">
+      </div>
+    </div>
+
+    <div class="net-preview" id="netPreview">
+      Enter order total to see estimated net earnings
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+      <button class="btn-save" id="btnSave" onclick="submitSale()">Save Sale</button>
+    </div>
   </div>
 </div>
 
 <script>
-  const STORAGE_KEY = 'personalOpsWebAppUrl';
-
-  // Header date
+  var STORAGE_KEY = 'personalOpsWebAppUrl';
   var now = new Date();
+
   document.getElementById('headerDate').textContent =
     now.toLocaleDateString('en-US', { weekday:'long', month:'long', day:'numeric', year:'numeric' });
+
+  var FEE_RATES = {
+    motors:      { rate: 0.136,  fixed: 0.40 },
+    electronics: { rate: 0.1325, fixed: 0.40 },
+    clothing:    { rate: 0.1325, fixed: 0.40 },
+    other:       { rate: 0.1325, fixed: 0.40 }
+  };
+
+  function calcNet(orderTotal, category) {
+    var total = parseFloat(orderTotal) || 0;
+    if (total <= 0) return 0;
+    var f = FEE_RATES[category] || FEE_RATES.other;
+    return Math.round((total - (total * f.rate) - f.fixed) * 100) / 100;
+  }
+
+  function updateNet() {
+    var total    = parseFloat(document.getElementById('f_orderTotal').value) || 0;
+    var category = document.getElementById('f_category').value;
+    var el       = document.getElementById('netPreview');
+    if (total > 0) {
+      var net  = calcNet(total, category);
+      var fees = Math.round((total - net) * 100) / 100;
+      el.innerHTML = 'Est. eBay fees: <strong>-$' + fees.toFixed(2) + '</strong>' +
+        '<span class="net-amount">Net: $' + net.toFixed(2) + '</span>' +
+        '<span class="fee-detail">Based on ' + (FEE_RATES[category].rate * 100).toFixed(2) + '% + $0.40 fixed fee</span>';
+    } else {
+      el.innerHTML = 'Enter order total to see estimated net earnings';
+    }
+  }
 
   function getUrl() { return localStorage.getItem(STORAGE_KEY) || ''; }
   function saveUrl() {
@@ -212,107 +240,77 @@
     if (!url) {
       document.getElementById('setupBanner').style.display = 'block';
       document.getElementById('salesContent').innerHTML = '<div class="loading">Waiting for setup...</div>';
-      document.getElementById('tasksList').innerHTML   = '<div class="loading">Waiting for setup...</div>';
+      document.getElementById('tasksList').innerHTML    = '<div class="loading">Waiting for setup...</div>';
       return;
     }
     loadSales(url);
     loadTasks(url);
   }
 
-  // ── eBay Sales — today only, summary ──
   function loadSales(url) {
+    document.getElementById('salesContent').innerHTML = '<div class="loading"><div class="spinner"></div><br>Loading...</div>';
     fetch(url + '?action=sales')
       .then(function(r) { return r.json(); })
       .then(function(data) {
-        var sales = data.sales || [];
-
-        // Filter to today only
         var todayStr = now.toLocaleDateString('en-US', { month:'short', day:'2-digit', year:'numeric' });
-        var todaySales = sales.filter(function(s) {
-          return s.date === todayStr;
-        });
-
-        renderSalesSummary(todaySales);
+        var today    = (data.sales || []).filter(function(s) { return s.date === todayStr; });
+        renderSales(today);
       })
       .catch(function(err) {
-        document.getElementById('salesContent').innerHTML =
-          '<div class="loading">Error: ' + err.message + '</div>';
+        document.getElementById('salesContent').innerHTML = '<div class="loading">Error: ' + err.message + '</div>';
       });
   }
 
-  function renderSalesSummary(sales) {
+  function renderSales(sales) {
     if (!sales.length) {
       document.getElementById('salesContent').innerHTML =
         '<div class="empty-state"><div class="empty-icon">📦</div>No sales today yet</div>';
       return;
     }
-
-    var totalOrders  = sales.length;
-    var totalRevenue = 0, totalNet = 0;
-    sales.forEach(function(s) {
-      totalRevenue += parseFloat(s.orderTotal)  || 0;
-      totalNet     += parseFloat(s.netEarnings) || 0;
-    });
-
+    var orders = sales.length, revenue = 0, net = 0;
+    sales.forEach(function(s) { revenue += s.orderTotal; net += s.netEarnings; });
     document.getElementById('salesContent').innerHTML =
       '<div class="stats-row">' +
-        '<div class="stat">' +
-          '<div class="stat-value">' + totalOrders + '</div>' +
-          '<div class="stat-label">Orders</div>' +
-        '</div>' +
-        '<div class="stat">' +
-          '<div class="stat-value">$' + totalRevenue.toFixed(2) + '</div>' +
-          '<div class="stat-label">Revenue</div>' +
-        '</div>' +
-        '<div class="stat">' +
-          '<div class="stat-value green">$' + totalNet.toFixed(2) + '</div>' +
-          '<div class="stat-label">Net Earned</div>' +
-        '</div>' +
+        '<div class="stat"><div class="stat-value">' + orders + '</div><div class="stat-label">Orders</div></div>' +
+        '<div class="stat"><div class="stat-value">$' + revenue.toFixed(2) + '</div><div class="stat-label">Revenue</div></div>' +
+        '<div class="stat"><div class="stat-value green">$' + net.toFixed(2) + '</div><div class="stat-label">Net Earned</div></div>' +
       '</div>';
   }
 
-  // ── Tasks ──
   function loadTasks(url) {
     fetch(url + '?action=tasks')
       .then(function(r) { return r.json(); })
-      .then(function(data) {
-        var tasks = data.tasks || [];
-        renderTasks(tasks);
-      })
+      .then(function(data) { renderTasks(data.tasks || []); })
       .catch(function(err) {
-        document.getElementById('tasksList').innerHTML =
-          '<div class="loading">Error: ' + err.message + '</div>';
+        document.getElementById('tasksList').innerHTML = '<div class="loading">Error: ' + err.message + '</div>';
       });
   }
 
   function renderTasks(tasks) {
-    var incomplete = tasks.filter(function(t) { return !t.completed; }).length;
-    document.getElementById('tasksBadge').textContent = incomplete + ' pending';
-
+    var pending = tasks.filter(function(t) { return !t.completed; }).length;
+    document.getElementById('tasksBadge').textContent = pending + ' pending';
     if (!tasks.length) {
       document.getElementById('tasksList').innerHTML =
-        '<div class="empty-state"><div class="empty-icon">🎉</div>No tasks found</div>';
+        '<div class="empty-state"><div class="empty-icon">🎉</div>All clear!</div>';
       return;
     }
-
     var today = new Date(); today.setHours(0,0,0,0);
     var html  = '';
-
-    tasks.slice(0, 15).forEach(function(t) {
+    tasks.slice(0,15).forEach(function(t) {
       var dueStr = '', dueClass = '';
       if (t.due) {
         var due = new Date(t.due); due.setHours(0,0,0,0);
         var diff = Math.round((due - today) / 86400000);
-        if (diff < 0)       { dueStr = 'Overdue ' + Math.abs(diff) + 'd'; dueClass = 'overdue'; }
-        else if (diff === 0){ dueStr = 'Due today';  dueClass = 'today'; }
-        else                { dueStr = 'Due in ' + diff + 'd'; dueClass = 'future'; }
+        if (diff < 0)        { dueStr = 'Overdue ' + Math.abs(diff) + 'd'; dueClass = 'overdue'; }
+        else if (diff === 0) { dueStr = 'Due today';  dueClass = 'today'; }
+        else                 { dueStr = 'Due in ' + diff + 'd'; dueClass = 'future'; }
       }
       var checkClass = t.completed ? 'done' : (dueClass === 'overdue' ? 'overdue' : '');
       html +=
         '<div class="task-item">' +
           '<div class="task-check ' + checkClass + '">' + (t.completed ? '✓' : '') + '</div>' +
           '<div class="task-content">' +
-            '<div class="task-title' + (t.completed ? ' done' : '') + '">' + escHtml(t.title) + '</div>' +
+            '<div class="task-title' + (t.completed ? ' done' : '') + '">' + esc(t.title) + '</div>' +
             (dueStr ? '<div class="task-due ' + dueClass + '">' + dueStr + '</div>' : '') +
           '</div>' +
         '</div>';
@@ -320,9 +318,50 @@
     document.getElementById('tasksList').innerHTML = html;
   }
 
-  function escHtml(s) {
-    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;')
-      .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  function openModal()  { document.getElementById('saleModal').classList.add('open'); }
+  function closeModal() {
+    document.getElementById('saleModal').classList.remove('open');
+    ['f_item','f_orderTotal','f_salePrice','f_shipping','f_buyer','f_orderId'].forEach(function(id) {
+      document.getElementById(id).value = '';
+    });
+    document.getElementById('f_qty').value = '1';
+    document.getElementById('f_category').value = 'motors';
+    document.getElementById('netPreview').innerHTML = 'Enter order total to see estimated net earnings';
+  }
+
+  function submitSale() {
+    var url   = getUrl();
+    var total = parseFloat(document.getElementById('f_orderTotal').value) || 0;
+    if (!total) { alert('Please enter the Order Total.'); return; }
+
+    var btn = document.getElementById('btnSave');
+    btn.disabled = true; btn.textContent = 'Saving...';
+
+    var params = new URLSearchParams({
+      action:     'logsale',
+      date:       now.toISOString().split('T')[0],
+      category:   document.getElementById('f_category').value,
+      item:       document.getElementById('f_item').value,
+      buyer:      document.getElementById('f_buyer').value,
+      qty:        document.getElementById('f_qty').value,
+      salePrice:  document.getElementById('f_salePrice').value || 0,
+      shipping:   document.getElementById('f_shipping').value  || 0,
+      orderTotal: total,
+      orderId:    document.getElementById('f_orderId').value
+    });
+
+    fetch(url + '?' + params.toString())
+      .then(function(r) { return r.json(); })
+      .then(function(d) {
+        if (d.success) { closeModal(); loadSales(url); }
+        else { alert('Error: ' + (d.error || 'Unknown')); }
+      })
+      .catch(function(err) { alert('Error: ' + err.message); })
+      .finally(function() { btn.disabled = false; btn.textContent = 'Save Sale'; });
+  }
+
+  function esc(s) {
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
   }
 
   loadAll();
