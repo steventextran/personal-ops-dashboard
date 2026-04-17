@@ -35,29 +35,6 @@
   .stat-value.green { color: #34C759; }
   .stat-label { font-size: 11px; color: #8E8E93; margin-top: 4px; }
 
-  /* Modal */
-  .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 200; align-items: center; justify-content: center; padding: 16px; }
-  .modal-overlay.open { display: flex; }
-  .modal { background: #fff; border-radius: 16px; padding: 24px; width: 100%; max-width: 440px; box-shadow: 0 8px 32px rgba(0,0,0,0.2); max-height: 90vh; overflow-y: auto; }
-  .modal h2 { font-size: 17px; font-weight: 700; margin-bottom: 16px; }
-
-  .form-row { margin-bottom: 12px; }
-  .form-row label { display: block; font-size: 11px; font-weight: 600; color: #8E8E93; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
-  .form-row input,
-  .form-row select { width: 100%; padding: 10px 12px; border: 1px solid #E5E5EA; border-radius: 8px; font-size: 14px; color: #1C1C1E; background: #fff; }
-  .form-row input:focus,
-  .form-row select:focus { outline: none; border-color: #007AFF; }
-  .form-2col { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-
-  .net-preview { background: #F2F2F7; border-radius: 8px; padding: 12px; margin-bottom: 16px; font-size: 13px; color: #8E8E93; }
-  .net-preview .net-amount { font-size: 20px; font-weight: 700; color: #34C759; display: block; margin-top: 4px; }
-  .net-preview .fee-detail { font-size: 11px; color: #8E8E93; margin-top: 2px; }
-
-  .modal-actions { display: flex; gap: 10px; }
-  .btn-cancel { flex: 1; padding: 11px; border: 1px solid #E5E5EA; border-radius: 8px; font-size: 14px; cursor: pointer; background: #fff; }
-  .btn-save   { flex: 2; padding: 11px; border: none; background: #1C1C1E; color: #fff; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; }
-  .btn-save:disabled { background: #8E8E93; cursor: not-allowed; }
-
   .task-item { padding: 12px 18px; border-bottom: 1px solid #F2F2F7; display: flex; align-items: flex-start; gap: 12px; }
   .task-item:last-child { border-bottom: none; }
   .task-check { width: 20px; height: 20px; border-radius: 50%; border: 2px solid #D1D1D6; flex-shrink: 0; margin-top: 1px; display: flex; align-items: center; justify-content: center; font-size: 11px; color: #fff; }
@@ -122,105 +99,12 @@
   </div>
 </div>
 
-<!-- Log Sale Modal -->
-<div class="modal-overlay" id="saleModal">
-  <div class="modal">
-    <h2>🛍 Log eBay Sale</h2>
-
-    <div class="form-row">
-      <label>Category</label>
-      <select id="f_category" onchange="updateNet()">
-        <option value="motors">eBay Motors Parts (13.6%)</option>
-        <option value="electronics">Electronics (13.25%)</option>
-        <option value="clothing">Clothing & Accessories (13.25%)</option>
-        <option value="other">Other / General (13.25%)</option>
-      </select>
-    </div>
-
-    <div class="form-row">
-      <label>Item Title</label>
-      <input type="text" id="f_item" placeholder="e.g. Tesla Sun Visor Cover - Black">
-    </div>
-
-    <div class="form-2col">
-      <div class="form-row">
-        <label>Order Total ($)</label>
-        <input type="number" id="f_orderTotal" placeholder="25.98" step="0.01" oninput="updateNet()">
-      </div>
-      <div class="form-row">
-        <label>Sale Price ($)</label>
-        <input type="number" id="f_salePrice" placeholder="19.99" step="0.01">
-      </div>
-    </div>
-
-    <div class="form-2col">
-      <div class="form-row">
-        <label>Shipping Charged ($)</label>
-        <input type="number" id="f_shipping" placeholder="0.00" step="0.01">
-      </div>
-      <div class="form-row">
-        <label>Qty</label>
-        <input type="number" id="f_qty" value="1" min="1">
-      </div>
-    </div>
-
-    <div class="form-2col">
-      <div class="form-row">
-        <label>Buyer Username</label>
-        <input type="text" id="f_buyer" placeholder="buyerusername">
-      </div>
-      <div class="form-row">
-        <label>Order ID (optional)</label>
-        <input type="text" id="f_orderId" placeholder="01-12345-67890">
-      </div>
-    </div>
-
-    <div class="net-preview" id="netPreview">
-      Enter order total to see estimated net earnings
-    </div>
-
-    <div class="modal-actions">
-      <button class="btn-cancel" onclick="closeModal()">Cancel</button>
-      <button class="btn-save" id="btnSave" onclick="submitSale()">Save Sale</button>
-    </div>
-  </div>
-</div>
-
 <script>
   var STORAGE_KEY = 'personalOpsWebAppUrl';
   var now = new Date();
 
   document.getElementById('headerDate').textContent =
     now.toLocaleDateString('en-US', { weekday:'long', month:'long', day:'numeric', year:'numeric' });
-
-  var FEE_RATES = {
-    motors:      { rate: 0.136,  fixed: 0.40 },
-    electronics: { rate: 0.1325, fixed: 0.40 },
-    clothing:    { rate: 0.1325, fixed: 0.40 },
-    other:       { rate: 0.1325, fixed: 0.40 }
-  };
-
-  function calcNet(orderTotal, category) {
-    var total = parseFloat(orderTotal) || 0;
-    if (total <= 0) return 0;
-    var f = FEE_RATES[category] || FEE_RATES.other;
-    return Math.round((total - (total * f.rate) - f.fixed) * 100) / 100;
-  }
-
-  function updateNet() {
-    var total    = parseFloat(document.getElementById('f_orderTotal').value) || 0;
-    var category = document.getElementById('f_category').value;
-    var el       = document.getElementById('netPreview');
-    if (total > 0) {
-      var net  = calcNet(total, category);
-      var fees = Math.round((total - net) * 100) / 100;
-      el.innerHTML = 'Est. eBay fees: <strong>-$' + fees.toFixed(2) + '</strong>' +
-        '<span class="net-amount">Net: $' + net.toFixed(2) + '</span>' +
-        '<span class="fee-detail">Based on ' + (FEE_RATES[category].rate * 100).toFixed(2) + '% + $0.40 fixed fee</span>';
-    } else {
-      el.innerHTML = 'Enter order total to see estimated net earnings';
-    }
-  }
 
   function getUrl() { return localStorage.getItem(STORAGE_KEY) || ''; }
   function saveUrl() {
@@ -249,7 +133,7 @@
       .then(function(r) { return r.json(); })
       .then(function(data) {
         var todayStr = now.toLocaleDateString('en-US', { month:'short', day:'2-digit', year:'numeric' });
-        var today    = (data.sales || []).filter(function(s) { return s.date === todayStr; });
+        var today = (data.sales || []).filter(function(s) { return s.date === todayStr; });
         renderSales(today);
       })
       .catch(function(err) {
@@ -312,48 +196,6 @@
         '</div>';
     });
     document.getElementById('tasksList').innerHTML = html;
-  }
-
-  function openModal()  { document.getElementById('saleModal').classList.add('open'); }
-  function closeModal() {
-    document.getElementById('saleModal').classList.remove('open');
-    ['f_item','f_orderTotal','f_salePrice','f_shipping','f_buyer','f_orderId'].forEach(function(id) {
-      document.getElementById(id).value = '';
-    });
-    document.getElementById('f_qty').value = '1';
-    document.getElementById('f_category').value = 'motors';
-    document.getElementById('netPreview').innerHTML = 'Enter order total to see estimated net earnings';
-  }
-
-  function submitSale() {
-    var url   = getUrl();
-    var total = parseFloat(document.getElementById('f_orderTotal').value) || 0;
-    if (!total) { alert('Please enter the Order Total.'); return; }
-
-    var btn = document.getElementById('btnSave');
-    btn.disabled = true; btn.textContent = 'Saving...';
-
-    var params = new URLSearchParams({
-      action:     'logsale',
-      date:       now.toISOString().split('T')[0],
-      category:   document.getElementById('f_category').value,
-      item:       document.getElementById('f_item').value,
-      buyer:      document.getElementById('f_buyer').value,
-      qty:        document.getElementById('f_qty').value,
-      salePrice:  document.getElementById('f_salePrice').value || 0,
-      shipping:   document.getElementById('f_shipping').value  || 0,
-      orderTotal: total,
-      orderId:    document.getElementById('f_orderId').value
-    });
-
-    fetch(url + '?' + params.toString())
-      .then(function(r) { return r.json(); })
-      .then(function(d) {
-        if (d.success) { closeModal(); loadSales(url); }
-        else { alert('Error: ' + (d.error || 'Unknown')); }
-      })
-      .catch(function(err) { alert('Error: ' + err.message); })
-      .finally(function() { btn.disabled = false; btn.textContent = 'Save Sale'; });
   }
 
   function esc(s) {
